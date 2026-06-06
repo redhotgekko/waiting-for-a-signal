@@ -1,0 +1,54 @@
+[package]
+name = "waiting_for_a_signal"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "waiting-for-a-signal"
+path = "src/main.rs"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Telegram (rustls to avoid OpenSSL on Pi)
+teloxide = { version = "0.13", default-features = false, features = ["macros", "rustls"] }
+
+# HTTP client (rustls to avoid OpenSSL on Pi)
+reqwest = { version = "0.11", default-features = false, features = ["rustls-tls", "json"] }
+
+# Serialisation
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Config
+toml = "0.8"
+
+# Stable IDs
+ulid = { version = "1", features = ["serde"] }
+
+# Atomic file writes
+tempfile = "3"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tracing-appender = "0.2"
+
+# Errors
+anyhow = "1"
+thiserror = "2"
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.10"
+
+# Fuzzy search
+fuzzy-matcher = "0.3"
+
+# Async traits
+async-trait = "0.1"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"

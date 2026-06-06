@@ -1,0 +1,109 @@
+# ============================================================
+# WaitingForASignal — example configuration
+#
+# Copy this file to config.toml and fill in the required tokens.
+# The bot discovers the file in this order:
+#   1. --config <path> command-line flag
+#   2. $WAITING_FOR_A_SIGNAL_CONFIG environment variable
+#   3. /etc/waiting-for-a-signal/config.toml
+#   4. ./config.toml
+#
+# This file contains secrets. Protect it:
+#   chmod 600 config.toml
+# ============================================================
+
+
+# ---- Messaging channels (at least one required) ------------
+#
+# Supported channels:
+#   [telegram]  — Telegram bot (recommended, fully tested)
+#   [twilio]    — Cloud SMS via Twilio API
+#
+# Both channels may be active simultaneously.
+
+[telegram]
+# Your Telegram bot token from @BotFather.
+token = "123456789:ABCdefGhIjKlMnOpQrStUvWxYz"
+
+# [twilio]
+# Cloud SMS via the Twilio Messages API.
+# Inbound messages are fetched by polling; replies are sent via REST.
+# account_sid        = "ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+# auth_token         = "your_auth_token"
+# from_number        = "+14155551234"   # your Twilio number (E.164)
+# poll_interval_secs = 10               # optional, default 10
+
+
+# ---- Darwin (National Rail data) ---------------------------
+
+[darwin]
+# Your Consumer key from the Rail Delivery Group Live Departure Board product.
+# Register at https://raildata.org.uk and subscribe to the Live Departure Board product.
+# Not required when simulate = true.
+token = "your-ldbws-api-key-here"
+
+# Set to true to use the built-in simulator instead of the real Darwin API.
+# Returns realistic fake departure data and introduces delays, cancellations,
+# and platform changes over time so you can exercise the full notification
+# pipeline without an API key.
+# simulate = true
+
+# LDBWS REST API base URL. The default below is correct.
+# Only change this if National Rail moves the endpoint.
+# endpoint = "https://api1.raildata.org.uk/1010-live-departure-board-dep1_2/LDBWS/api/20220120"
+
+
+# ---- Storage -----------------------------------------------
+
+[storage]
+# Directory where one JSON file per user is stored.
+# Created automatically if it does not exist.
+# On a Pi deployed with systemd, /var/lib/waiting-for-a-signal/users is conventional.
+# For local development, a relative path like "data/users" is fine.
+user_data_dir = "/var/lib/waiting-for-a-signal/users"
+
+
+# ---- Optional (defaults shown) -----------------------------
+
+[assets]
+# Path to the CRS station list CSV (columns: crs,station_name).
+# Relative paths are resolved relative to this config file's directory.
+crs_csv_path = "assets/crs.csv"
+
+[polling]
+# How often (in seconds) to poll Darwin for each watched station.
+interval_seconds = 60
+
+# How many upcoming departures to show per station in the live /now command.
+departure_rows = 10
+
+# How many rows to fetch from Darwin per polling call.
+# Should exceed departure_rows so destination filters don't miss trains.
+poll_rows = 149
+
+# When true (default), the destination filter is passed to the Darwin API as
+# filterCrs so Darwin returns only trains calling at that station.
+# Set to false to fetch the full origin board once and filter client-side using
+# subsequentCallingPoints data, reducing API calls when many users share an
+# origin station. Note: Darwin does not always populate calling-point data for
+# unfiltered boards, so results may be incomplete.
+filter_destination_at_api = true
+
+[logging]
+# Log level: trace | debug | info | warn | error
+# Use "debug" to see every Darwin request and Telegram message.
+level = "info"
+
+# When set, logs are written to daily-rolling files in this directory instead
+# of stdout.  Files are named waiting-for-a-signal.log.YYYY-MM-DD.  The directory is
+# created automatically if it does not exist.
+# log_dir = "/var/log/waiting-for-a-signal"
+
+# Set to true to emit ANSI colour codes.  Leave false when output is piped to
+# a file or a log aggregator that does not strip escape sequences.
+# ansi = false
+
+[kill_switch]
+# When true, the /kill command causes the service to exit gracefully.
+# Disabled by default — set to true on deployments where remote shutdown is needed.
+# enabled = true
