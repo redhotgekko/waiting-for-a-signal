@@ -4,6 +4,12 @@ A Rust service that sends UK railway departure notifications to users via Telegr
 
 It polls the National Rail Darwin API for live departure data and proactively notifies subscribers when something changes — a delay, cancellation, platform change, or early departure. Multiple users watching the same station result in a single API call.
 
+## Why this exists
+
+During peak hours, rail disruptions tend to hit exactly when mobile data networks are most congested. Standard railway apps become slow or unresponsive at the moment you need them most.
+
+This bot pushes notifications to you rather than requiring you to refresh an app. SMS support is deliberate: SMS uses a separate signalling channel and gets through when data is congested, giving you a fallback that works when internet-dependent apps don't.
+
 ## Screenshots
 
 ### `/now` — live departures and station search
