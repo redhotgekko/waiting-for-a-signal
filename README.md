@@ -4,6 +4,16 @@ A Rust service that sends UK railway departure notifications to users via Telegr
 
 It polls the National Rail Darwin API for live departure data and proactively notifies subscribers when something changes — a delay, cancellation, platform change, or early departure. Multiple users watching the same station result in a single API call.
 
+## Screenshots
+
+### `/now` — live departures and station search
+
+![/now command and /find search](screenshot_telegram_now.png)
+
+### `/sub` — subscription and change notifications
+
+![/sub command and departure notifications](screenshot_telegram_sub.png)
+
 ## Requirements
 
 - Rust toolchain (edition 2024, stable)
