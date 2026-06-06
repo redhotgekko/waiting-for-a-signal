@@ -1,0 +1,10 @@
+/target
+config.toml
+*.json.tmp.*
+*.lock
+*.pdf
+.claude/
+train-bot-spec.md
+CLAUDE.md
+nohup.out
+docs/
