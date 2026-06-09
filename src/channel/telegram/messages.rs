@@ -26,6 +26,12 @@ pub async fn handle_message(bot: Bot, msg: Message, state: AppState) -> Result<(
         let _ = state.store.persist(&user).await;
     }
 
+    if state.capture_telegram_user_info {
+        if let Some(tg_user) = msg.from.as_ref() {
+            super::maybe_capture_user_info(tg_user, &user_arc, &state.store).await;
+        }
+    }
+
     let reply = if is_new {
         super::commands::welcome_message()
     } else {

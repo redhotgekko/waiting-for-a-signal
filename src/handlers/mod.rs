@@ -34,6 +34,9 @@ pub struct AppState {
     /// Sending on this channel triggers a graceful shutdown.
     pub shutdown: tokio::sync::mpsc::UnboundedSender<()>,
     pub kill_switch_enabled: bool,
+    /// When `true`, Telegram handlers store the user's display name and
+    /// @username in their profile on every message.
+    pub capture_telegram_user_info: bool,
 }
 
 // ---------------------------------------------------------------------------

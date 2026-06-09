@@ -70,6 +70,12 @@ pub async fn handle_command(bot: Bot, msg: Message, cmd: Command, state: AppStat
         let _ = state.store.persist(&user).await;
     }
 
+    if state.capture_telegram_user_info {
+        if let Some(tg_user) = msg.from.as_ref() {
+            super::maybe_capture_user_info(tg_user, &user_arc, &state.store).await;
+        }
+    }
+
     let body = match cmd {
         Command::Help => exec_help(),
         Command::Find(query) => commands::exec_find(&query, &state),

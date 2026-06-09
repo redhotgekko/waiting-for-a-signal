@@ -130,6 +130,7 @@ async fn main() -> Result<()> {
         polling_rows: cfg.polling.departure_rows,
         shutdown: shutdown_tx,
         kill_switch_enabled: cfg.kill_switch.enabled,
+        capture_telegram_user_info: cfg.telegram.as_ref().is_some_and(|t| t.capture_user_info),
     };
 
     // -----------------------------------------------------------------------

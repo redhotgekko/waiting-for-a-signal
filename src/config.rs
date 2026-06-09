@@ -31,6 +31,10 @@ pub struct Config {
 #[derive(Debug, Clone, Deserialize)]
 pub struct TelegramConfig {
     pub token: String,
+    /// When `true`, the user's Telegram display name and @username are stored
+    /// in their profile and updated on each message.  Defaults to `false`.
+    #[serde(default)]
+    pub capture_user_info: bool,
 }
 
 /// Twilio cloud SMS channel configuration.

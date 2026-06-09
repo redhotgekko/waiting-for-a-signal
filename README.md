@@ -101,6 +101,7 @@ At least one messaging channel (`[telegram]` or `[twilio]`) must be present. Bot
 | `[polling]` | `departure_rows` | `10` | Departures to show per station in the live `/now` response |
 | `[polling]` | `poll_rows` | `149` | Rows fetched from Darwin per polling call (should exceed `departure_rows`) |
 | `[polling]` | `filter_destination_at_api` | `true` | Pass destination filter to Darwin API; set `false` to filter client-side |
+| `[telegram]` | `capture_user_info` | `false` | When `true`, stores each user's Telegram display name and @username in their profile, updated on every message |
 | `[twilio]` | `poll_interval_secs` | `10` | How often to poll the Twilio API for inbound messages |
 | `[logging]` | `level` | `info` | Log level: `trace`, `debug`, `info`, `warn`, `error` |
 | `[logging]` | `log_dir` | *(stdout)* | Directory for daily-rolling log files (`waiting-for-a-signal.log.YYYY-MM-DD`); omit to log to stdout |

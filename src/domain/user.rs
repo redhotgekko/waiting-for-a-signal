@@ -97,6 +97,14 @@ pub struct User {
     /// Takes precedence over `notifications_paused = false`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub paused_until: Option<DateTime<Utc>>,
+    /// Telegram display name (first + last name).  Only populated when
+    /// `[telegram] capture_user_info = true`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub telegram_name: Option<String>,
+    /// Telegram @username (without the leading `@`).  Only populated when
+    /// `[telegram] capture_user_info = true`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub telegram_username: Option<String>,
     pub subscriptions: Vec<Subscription>,
 }
 
@@ -108,6 +116,8 @@ impl User {
             created_at: Utc::now(),
             notifications_paused: false,
             paused_until: None,
+            telegram_name: None,
+            telegram_username: None,
             subscriptions: Vec::new(),
         }
     }

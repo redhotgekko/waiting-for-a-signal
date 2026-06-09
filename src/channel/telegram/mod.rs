@@ -11,8 +11,33 @@ use crate::channel::ChannelAdapter;
 use crate::handlers::AppState;
 use anyhow::Result;
 use async_trait::async_trait;
+use std::sync::Arc;
 use teloxide::prelude::*;
+use tokio::sync::RwLock;
 use tracing::info;
+
+/// When `capture_user_info` is enabled, update the stored display name and
+/// @username for a Telegram user, persisting only if something changed.
+pub(super) async fn maybe_capture_user_info(
+    tg_user: &teloxide::types::User,
+    user_arc: &Arc<RwLock<crate::domain::User>>,
+    store: &crate::storage::UserStore,
+) {
+    let name = match &tg_user.last_name {
+        Some(last) => format!("{} {}", tg_user.first_name, last),
+        None => tg_user.first_name.clone(),
+    };
+    let username = tg_user.username.clone();
+
+    let mut user = user_arc.write().await;
+    let changed =
+        user.telegram_name.as_deref() != Some(name.as_str()) || user.telegram_username != username;
+    if changed {
+        user.telegram_name = Some(name);
+        user.telegram_username = username;
+        let _ = store.persist(&user).await;
+    }
+}
 
 /// Telegram-specific adapter.
 ///
