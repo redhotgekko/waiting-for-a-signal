@@ -154,12 +154,19 @@ fn save_debug_capture(dir: &Path, crs: &str, num_rows: u32, filter_crs: Option<&
     use flate2::{Compression, write::GzEncoder};
     use std::io::Write;
 
-    let ts = chrono::Utc::now().format("%Y-%m-%dT%H-%M-%S%.6fZ");
+    let now = chrono::Utc::now();
+    let daily_dir = dir.join(now.format("%d%b%Y").to_string());
+    if let Err(e) = std::fs::create_dir_all(&daily_dir) {
+        warn!(path = %daily_dir.display(), err = %e, "Failed to create Darwin debug capture daily directory");
+        return;
+    }
+
+    let ts = now.format("%Y-%m-%dT%H-%M-%S%.6fZ");
     let filter_part = filter_crs
         .map(|f| format!("_filter{f}"))
         .unwrap_or_default();
     let filename = format!("{ts}_{crs}_rows{num_rows}{filter_part}.json.gz");
-    let path = dir.join(&filename);
+    let path = daily_dir.join(&filename);
 
     let file = match std::fs::File::create(&path) {
         Ok(f) => f,
