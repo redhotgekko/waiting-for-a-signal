@@ -81,6 +81,28 @@ pub struct DarwinConfig {
     /// When true, use a built-in simulator instead of the real Darwin API.
     #[serde(default)]
     pub simulate: bool,
+    /// When enabled, each raw JSON response is saved to disk for debugging.
+    #[serde(default)]
+    pub debug_capture: DebugCaptureConfig,
+}
+
+/// Saves raw Darwin JSON responses to disk for offline debugging.
+///
+/// Disabled by default.  Enable via `[darwin.debug_capture]` in config:
+///
+/// ```toml
+/// [darwin.debug_capture]
+/// enabled = true
+/// dir = "darwin-debug"   # relative paths resolve from the config file
+/// ```
+#[derive(Debug, Clone, Default, Deserialize)]
+pub struct DebugCaptureConfig {
+    /// Set to `true` to start capturing.  All other fields are ignored when false.
+    #[serde(default)]
+    pub enabled: bool,
+    /// Directory in which to write capture files.
+    /// Defaults to `darwin-debug` in the current working directory when not set.
+    pub dir: Option<PathBuf>,
 }
 
 impl DarwinConfig {
@@ -275,6 +297,9 @@ fn find_config_path() -> Result<PathBuf> {
 fn resolve_paths(cfg: &mut Config, base: &Path) {
     cfg.storage.user_data_dir = resolve(base, &cfg.storage.user_data_dir);
     cfg.assets.crs_csv_path = resolve(base, &cfg.assets.crs_csv_path);
+    if let Some(dir) = &cfg.darwin.debug_capture.dir {
+        cfg.darwin.debug_capture.dir = Some(resolve(base, dir));
+    }
 }
 
 fn resolve(base: &Path, p: &Path) -> PathBuf {

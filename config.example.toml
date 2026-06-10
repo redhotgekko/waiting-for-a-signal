@@ -57,6 +57,14 @@ token = "your-ldbws-api-key-here"
 # Only change this if National Rail moves the endpoint.
 # endpoint = "https://api1.raildata.org.uk/1010-live-departure-board-dep1_2/LDBWS/api/20220120"
 
+# Debug capture: save every raw Darwin JSON response to disk as a gzip file.
+# Disabled by default.  Enable to replay or inspect API responses offline.
+# Files are named: <datetime>_<crs>_rows<n>[_filter<crs>].json.gz
+# Each file is unique — existing files are never overwritten.
+# [darwin.debug_capture]
+# enabled = true
+# dir = "darwin-debug"   # relative paths resolve from this config file
+
 
 # ---- Storage -----------------------------------------------
 

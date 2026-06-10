@@ -96,6 +96,8 @@ At least one messaging channel (`[telegram]` or `[twilio]`) must be present. Bot
 |---------|-----|---------|-------------|
 | `[darwin]` | `simulate` | `false` | Use the built-in fake departure source instead of the real API |
 | `[darwin]` | `endpoint` | *(raildata.org.uk)* | LDBWS REST API base URL — only change if the endpoint moves |
+| `[darwin.debug_capture]` | `enabled` | `false` | Save every raw Darwin JSON response to disk as a gzip file |
+| `[darwin.debug_capture]` | `dir` | `darwin-debug` | Directory to write capture files into (created automatically) |
 | `[assets]` | `crs_csv_path` | `assets/crs.csv` | Path to the CRS station list CSV |
 | `[polling]` | `interval_seconds` | `60` | How often to poll Darwin per watched station |
 | `[polling]` | `departure_rows` | `10` | Departures to show per station in the live `/now` response |
@@ -191,6 +193,24 @@ To test without a Darwin API key, enable the Darwin simulator:
 [darwin]
 simulate = true
 ```
+
+### Capturing Darwin responses
+
+To save every raw JSON response from the Darwin API for offline inspection or replay:
+
+```toml
+[darwin.debug_capture]
+enabled = true
+dir = "darwin-debug"   # relative paths resolve from the config file
+```
+
+Each response is saved as a gzip-compressed file (maximum compression). Files are named after the UTC timestamp, origin station, row count, and optional destination filter, so they are unique and self-describing:
+
+```
+darwin-debug/2026-06-10T15-30-00.123456Z_WAT_rows149_filterLBG.json.gz
+```
+
+This feature is disabled by default and has no effect on normal operation when `enabled = false`.
 
 ## License
 
